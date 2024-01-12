@@ -1,0 +1,14 @@
+.form-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.form-container {
+    min-width: 70%;
+    max-width: 90%;
+    padding: 1rem;
+    background-color: #0e0e0e;
+    border-radius: 10px;
+}
