@@ -9,11 +9,29 @@ const Register = () => {
     const [submit, setSubmit] = useState(false)
     const [aletMessage, setAlertMessage] = useState(null)
 
+    // Procura o prefixo correto para o token CSRF
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === name + '=') {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     // Pegar enviar e pegar dados para o backend a respeito do registro
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post('/submit_register');
+                const csrftoken = getCookie('csrftoken')
+
+                const response = await axios.post('/auth/submit_register/');
                 setData(response.data);
 
                 if (data !== null && data.result === 'error') {
@@ -41,9 +59,9 @@ const Register = () => {
                 <form onSubmit={submitHandler}>
                     <h1 className='h3 fw-normal'>Registro</h1>
                     {
-                    aletMessage !== null ? <div class="alert alert-danger" role="alert">
-                        {aletMessage}
-                    </div> : ''
+                        aletMessage !== null ? <div class="alert alert-danger" role="alert">
+                            {aletMessage}
+                        </div> : ''
                     }
                     <div>
                         <div className='form-floating'>
