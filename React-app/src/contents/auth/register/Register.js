@@ -5,8 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import adicional_style from './Register.module.css'
 
 const Register = () => {
-    const [data, setData] = useState(null)
-    const [submit, setSubmit] = useState(false)
     const [aletMessage, setAlertMessage] = useState(null)
 
     // Procura o prefixo correto para o token CSRF
@@ -26,31 +24,33 @@ const Register = () => {
     }
 
     // Pegar enviar e pegar dados para o backend a respeito do registro
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const csrftoken = getCookie('csrftoken')
+    const fetchData = async () => {
+        try {
+            const csrftoken = getCookie('csrftoken')
 
-                const response = await axios.post('/auth/submit_register/');
-                setData(response.data);
+            const response = await axios.post(
+                '/auth/submit_register/',
+                JSON.stringify({
+                    'username': document.getElementById('nameInput').value,
+                    'email': document.getElementById('emailInput').value,
+                    'password': document.getElementById('passwordInput').value,
+                    'confirmpassword': document.getElementById('confirmpasswordInput').value
+                })
+            );
 
-                if (data !== null && data.result === 'error') {
-                    setAlertMessage(data.error_message)
-                }
-            } catch (error) {
-                console.log(error);
-                setAlertMessage('Um erro aconteceu no sistema, tente novamente mais tarde')
-            } finally {
-                setSubmit(false)
+            if (response.data.error_message) {
+                setAlertMessage(response.data.error_message)
             }
-        };
 
-        fetchData();
-    }, [submit]);
+        } catch (error) {
+            console.log(error);
+            setAlertMessage('Um erro aconteceu no sistema, tente novamente mais tarde')
+        }
+    }
 
     function submitHandler(event) {
         event.preventDefault()
-        setSubmit(true)
+        fetchData()
     }
 
     return (
@@ -65,20 +65,20 @@ const Register = () => {
                     }
                     <div>
                         <div className='form-floating'>
-                            <input type='text' className='form-control mb-2 mt-2' id='floatinginput' placeholder='Email' required />
-                            <label for="floatinginput">Nome completo</label>
+                            <input type='text' className='form-control mb-2 mt-2' id='nameInput' name='nameInput' placeholder='Email' required />
+                            <label for="nameInput">Nome completo</label>
                         </div>
                         <div className='form-floating'>
-                            <input type='email' className='form-control mb-2 mt-2' id='floatinginput' placeholder='Email' required />
-                            <label for="floatinginput">Email</label>
+                            <input type='email' className='form-control mb-2 mt-2' id='emailInput' name='emailInput' placeholder='Email' required />
+                            <label for="emailInput">Email</label>
                         </div>
                         <div className='form-floating'>
-                            <input type='password' className='form-control mb-2 mt-2' id='floatinginput' placeholder='Senha' required />
-                            <label for="floatinginput">Senha</label>
+                            <input type='password' className='form-control mb-2 mt-2' id='passwordInput' name='passwordInput' placeholder='Senha' required />
+                            <label for="passwordInput">Senha</label>
                         </div>
                         <div className='form-floating'>
-                            <input type='password' className='form-control mb-2 mt-2' id='floatinginput' placeholder='Senha' required />
-                            <label for="floatinginput">Repita sua senha</label>
+                            <input type='password' className='form-control mb-2 mt-2' id='confirmpasswordInput' name='confirmpasswordInput' placeholder='Senha' required />
+                            <label for="confirmpasswordInput">Repita sua senha</label>
                         </div>
                     </div>
 
