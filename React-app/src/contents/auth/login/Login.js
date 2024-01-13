@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import adicional_style from './Register.module.css'
+import adicional_style from './Login.module.css'
 
-const Register = () => {
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const Login = () => {
     const [aletMessage, setAlertMessage] = useState(null)
 
     // Procura o prefixo correto para o token CSRF
@@ -29,12 +30,10 @@ const Register = () => {
             const csrftoken = getCookie('csrftoken')
 
             const response = await axios.post(
-                '/auth/submit_register/',
+                '/auth/submit_login/',
                 JSON.stringify({
-                    'username': document.getElementById('nameInput').value,
                     'email': document.getElementById('emailInput').value,
-                    'password': document.getElementById('passwordInput').value,
-                    'confirmpassword': document.getElementById('confirmpasswordInput').value
+                    'password': document.getElementById('passwordInput').value
                 })
             );
 
@@ -57,17 +56,13 @@ const Register = () => {
         <div className={adicional_style['form-main']}>
             <div className={adicional_style['form-container']}>
                 <form onSubmit={submitHandler}>
-                    <h1 className='h3 fw-normal'>Registro</h1>
+                    <h1 className='h3 fw-normal'>Login</h1>
                     {
                         aletMessage !== null ? <div class="alert alert-danger" role="alert">
                             {aletMessage}
                         </div> : ''
                     }
                     <div>
-                        <div className='form-floating'>
-                            <input type='text' className='form-control mb-2 mt-2' id='nameInput' name='nameInput' placeholder='Email' required />
-                            <label for="nameInput">Nome completo</label>
-                        </div>
                         <div className='form-floating'>
                             <input type='email' className='form-control mb-2 mt-2' id='emailInput' name='emailInput' placeholder='Email' required />
                             <label for="emailInput">Email</label>
@@ -76,18 +71,14 @@ const Register = () => {
                             <input type='password' className='form-control mb-2 mt-2' id='passwordInput' name='passwordInput' placeholder='Senha' required />
                             <label for="passwordInput">Senha</label>
                         </div>
-                        <div className='form-floating'>
-                            <input type='password' className='form-control mb-2 mt-2' id='confirmpasswordInput' name='confirmpasswordInput' placeholder='Senha' required />
-                            <label for="confirmpasswordInput">Repita sua senha</label>
-                        </div>
                     </div>
 
-                    <p className='mt-2 mb-2'>Já tem uma conta? Faça <a href='/auth/login' className='text-decoration-none'>Login aqui</a></p>
-                    <button className='btn btn-primary w-100 py-2'>Registrar</button>
+                    <p className='mt-2 mb-2'>Não tem uma conta? Se <a href='/auth/register' className='text-decoration-none'>Registre aqui</a></p>
+                    <button className='btn btn-primary w-100 py-2'>Login</button>
                 </form>
             </div>
         </div>
     )
 }
 
-export default Register
+export default Login
